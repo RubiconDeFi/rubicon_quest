@@ -33,13 +33,14 @@ async function eligibility() {
 
     const response = await query()
    
-    let swappeds = await response.swappeds;
-    let depositeds = await response.depositeds;
+    let swappeds = await response['data']['swappeds'];
+    let depositeds = await response;
     
     // print out the response
+    console.log(response)
     console.log(swappeds)
 
-    if (response != null && response.swappeds != null && response.depositeds != null) {
+    if (response['data'] != null && response['data']['swappeds'] != null && response['data']['depositeds'] != null) {
         console.log("Eligible")
         return 1
         
@@ -50,14 +51,5 @@ async function eligibility() {
     
 }
 
-query().catch((e) => console.error(`Failed to run example:`, e))
-
-// store the response in a variable
-const resp = query()
-
-// check if the response is eligible
-const eligible = eligibility(resp)
-
-// print out the response
-console.log(resp)
+eligibility().catch((e) => console.error(`Failed to run example:`, e))
 
