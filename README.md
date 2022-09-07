@@ -1,4 +1,4 @@
 # rubicon_quest
-Endpoint: graphclientrc.yml
-Query: quest-query.graphql
-Expression: quest_function.js
+Endpoint: graphclientrc.yml \n
+Query: quest-query.graphql \n
+Expression: quest_function.js \n
