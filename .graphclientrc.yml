@@ -1,0 +1,8 @@
+sources:
+  - name: LowLevelLogs
+    handler:
+      graphql:
+        endpoint: https://api.thegraph.com/subgraphs/name/denverbaumgartner/lowlevellogs
+
+documents:
+  - ./quest-query.graphql

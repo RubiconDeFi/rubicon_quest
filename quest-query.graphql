@@ -1,0 +1,18 @@
+query questEligibility($address: String!) {
+    swappeds(where: {recipient: $address}) {
+        txn
+        timestamp
+        recipient
+        inputAsset
+        targetAsset
+        inputAmount
+        realizedFill
+    }
+    depositeds(where: {depositor: $address}) {
+        txn
+        timestamp
+        depositor
+        asset
+        depositAmount
+    }
+}
