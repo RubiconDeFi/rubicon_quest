@@ -1,15 +1,17 @@
 {
-  "name" : "rubicon_quest",
+  "name": "rubicon_quest",
   "private": true,
-  "version" : "1.0.0",
-  "scripts" : {
-    "start" : "node quest.js",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node quest_test.js",
     "build-client": "graphclient build --fileType json",
     "graphiql": "graphiql serve-dev",
     "check": "exit 0"
   },
   "devDependencies": {
     "@graphprotocol/client-cli": "^2.2.7",
+    "coingecko-api": "^1.0.10",
+    "ethers": "^5.7.0",
     "graphql": "^16.6.0"
   }
 }
