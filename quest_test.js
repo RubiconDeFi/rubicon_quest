@@ -50,7 +50,6 @@ async function eligibility() {
     const provider = new ethers.providers.JsonRpcProvider(nodeUrl);
 
     if (response['data'] != null && response['data']['swappeds'] != null && response['data']['depositeds'] != null) {
-        console.log('swappeds and depositeds are not null')
 
         // set variables for swap and deposit eligibility
         let swapEligibility = false;

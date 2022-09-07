@@ -1,5 +1,5 @@
 query questEligibility($address: String!) {
-    swappeds(where: {recipient: $address}) {
+    swappeds(where: {recipient: $address, timestamp_gte: 1663646400}) {
         txn
         timestamp
         recipient
@@ -8,7 +8,7 @@ query questEligibility($address: String!) {
         inputAmount
         realizedFill
     }
-    depositeds(where: {depositor: $address}) {
+    depositeds(where: {depositor: $address, timestamp_gte: 1663646400}) {
         txn
         timestamp
         depositor
