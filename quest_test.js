@@ -35,8 +35,13 @@ async function query() {
 
 async function eligibility() {
 
+    // set variables for swap and deposit eligibility
+    var swapEligibility = false;
+    var depositEligibility = false;
+
     const response = await query()
-    const CoinGeckoClient = new CoinGecko();
+    //const CoinGeckoClient = new CoinGecko();
+    // for each asset utilize a set minimum price
 
    
     let swappeds = await response['data']['swappeds'];
@@ -50,10 +55,6 @@ async function eligibility() {
     const provider = new ethers.providers.JsonRpcProvider(nodeUrl);
 
     if (response['data'] != null && response['data']['swappeds'] != null && response['data']['depositeds'] != null) {
-
-        // set variables for swap and deposit eligibility
-        let swapEligibility = false;
-        let depositEligibility = false;
 
         // iterate through the swappeds and convert the inputAmount from an integer to a float
         // get the decimal value of the inputAsset and divide the inputAmount by 10^decimal
@@ -76,31 +77,46 @@ async function eligibility() {
             // get the price of the inputAsset from CoinGecko at the timestamp of the swap
             let timestamp = swappeds[i]['timestamp'];
 
+            // if the input asset is USDT, DAI, or USDC then set the price to 1
+            if (inputAssetSymbol == 'USDT' || inputAssetSymbol == 'DAI' || inputAssetSymbol == 'USDC') {
+                var price = 1;
+            } else if (inputAssetSymbol == 'WETH') {
+                var price = 2000;
+            } else if (inputAssetSymbol == 'WBTC') {
+                var price = 25000;
+            } else if (inputAssetSymbol == 'SNX') {
+                var price = 4;
+            } else if (inputAssetSymbol == 'OP') {
+                var price = 2;
+            } else {
+                var price = 1;
+            };
+
             // get the price during the timestamp
-            let price = await CoinGeckoClient.coins.fetchCoinContractMarketChartRange(inputAsset, 'optimistic-ethereum', {
-                from: timestamp-1,
-                to: timestamp+1,
-            });
+            // let price = await CoinGeckoClient.coins.fetchCoinContractMarketChartRange(inputAsset, 'optimistic-ethereum', {
+            //    from: timestamp-1,
+            //     to: timestamp+1,
+            // });
 
             // now get the average of the values in data.prices
-            let prices = price['data']['prices'];
-            let sum = 0;
-            for (let j = 0; j < prices.length; j++) {
-                sum += prices[j][1];
-            }   
-            let average = sum / prices.length;
+            // let prices = price['data']['prices'];
+            // let sum = 0;
+            // for (let j = 0; j < prices.length; j++) {
+            //     sum += prices[j][1];
+            // }   
+            // let average = sum / prices.length;
 
             // log the average price of the input asset
-            console.log('price of', inputAssetSymbol, ': ', average.toFixed(2));
+            console.log('price of', inputAssetSymbol, ': ', price.toFixed(2));
 
             // create a variable for the USD amount and log rounded value
-            let usdAmount = average * inputAmountFloat;
-            console.log('usd amount of', inputAssetSymbol, ': ', usdAmount.toFixed(2));
+            // let usdAmount = inputAmountFloat * price;
+            // console.log('usd amount swapped of', inputAssetSymbol, ': ', usdAmount.toFixed(2));
 
             // if the swap amount is greater than 20 USD, set swapEligibility to true
-            if (inputAmountFloat * average > 20) {
-                swapEligibility = true;
-            }
+            if (inputAmountFloat * price > 20) {
+                var swapEligibility = true;
+            };
 
             // log the swap eligibility
             console.log('swap eligibility: ', swapEligibility);
@@ -127,31 +143,44 @@ async function eligibility() {
 
             // get the price of the asset from CoinGecko at the timestamp of the deposit
             let timestamp = depositeds[i]['timestamp'];
+            
+            // if the input asset is USDT, DAI, or USDC then set the price to 1
+            if (assetSymbol == 'USDT' || assetSymbol == 'DAI' || assetSymbol == 'USDC') {
+                var price = 1;
+            } else if (assetSymbol == 'WETH') {
+                var price = 2500;
+            } else if (assetSymbol == 'WBTC') {
+                var price = 30000;
+            } else if (assetSymbol == 'SNX') {
+                var price = 4.5;
+            } else if (assetSymbol == 'OP') {
+                var price = 2;
+            };
 
             // get the price during the timestamp
-            let price = await CoinGeckoClient.coins.fetchCoinContractMarketChartRange(asset, 'optimistic-ethereum', {
-                from: timestamp-1,
-                to: timestamp+1,
-            });
+            // let price = await CoinGeckoClient.coins.fetchCoinContractMarketChartRange(asset, 'optimistic-ethereum', {
+            //     from: timestamp-1,
+            //     to: timestamp+1,
+            // });
             
             // now get the average of the values in data.prices
-            let prices = price['data']['prices'];
-            let sum = 0;
-            for (let j = 0; j < prices.length; j++) {
-                sum += prices[j][1];
-            }
-            let average = sum / prices.length;
+            // let prices = price['data']['prices'];
+            // let sum = 0;
+            // for (let j = 0; j < prices.length; j++) {
+            //     sum += prices[j][1];
+            // }
+            // let average = sum / prices.length;
 
             // log the average price of the asset
-            console.log('price of', assetSymbol, ': ', average.toFixed(2));
+            console.log('price of', assetSymbol, ': ', price.toFixed(2));
 
             // create a variable for the USD amount and log rounded value
-            let usdAmount = average * depositAmountFloat;
-            console.log('usd amount of', assetSymbol, ': ', usdAmount.toFixed(2));
+            // let usdAmount = price * depositAmountFloat;
+            // console.log('usd amount of', assetSymbol, ': ', usdAmount.toFixed(2));
 
             // if the deposit amount is greater than 20 USD, set depositEligibility to true
-            if (depositAmountFloat * average > 20) {
-                depositEligibility = true;
+            if (depositAmountFloat * price > 20) {
+                var depositEligibility = true;
             }
 
             // log the deposit eligibility
@@ -165,7 +194,7 @@ async function eligibility() {
         }
         
     }
-    console.log("Not Eligible")
+    console.log("         Not Eligible           ")
     return 0 
     }
 }

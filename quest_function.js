@@ -1,5 +1,5 @@
 async function eligibility(response) {
-    const CoinGeckoClient = new CoinGecko();
+    // const CoinGeckoClient = new CoinGecko();
 
     // seperate the subgraph query response
     let swappeds = response['data']['swappeds'];
@@ -41,29 +41,44 @@ async function eligibility(response) {
             // get the price of the inputAsset from CoinGecko at the timestamp of the swap
             let timestamp = swappeds[i]['timestamp'];
 
+            // if the input asset is USDT, DAI, or USDC then set the price to 1
+            if (inputAssetSymbol == 'USDT' || inputAssetSymbol == 'DAI' || inputAssetSymbol == 'USDC') {
+                var price = 1;
+            } else if (inputAssetSymbol == 'WETH') {
+                var price = 2000;
+            } else if (inputAssetSymbol == 'WBTC') {
+                var price = 25000;
+            } else if (inputAssetSymbol == 'SNX') {
+                var price = 4;
+            } else if (inputAssetSymbol == 'OP') {
+                var price = 2;
+            } else {
+                var price = 1;
+            };
+
             // get the price during the timestamp
-            let price = await CoinGeckoClient.coins.fetchCoinContractMarketChartRange(inputAsset, 'optimistic-ethereum', {
-                from: timestamp-1,
-                to: timestamp+1,
-            });
+            // let price = await CoinGeckoClient.coins.fetchCoinContractMarketChartRange(inputAsset, 'optimistic-ethereum', {
+            //     from: timestamp-1,
+            //     to: timestamp+1,
+            // });
 
             // now get the average of the values in data.prices
-            let prices = price['data']['prices'];
-            let sum = 0;
-            for (let j = 0; j < prices.length; j++) {
-                sum += prices[j][1];
-            }   
-            let average = sum / prices.length;
+            // let prices = price['data']['prices'];
+            // let sum = 0;
+            // for (let j = 0; j < prices.length; j++) {
+            //     sum += prices[j][1];
+            // }   
+            // let average = sum / prices.length;
 
             // log the average price of the input asset
-            console.log('price of', inputAssetSymbol, ': ', average.toFixed(2));
+            // console.log('price of', inputAssetSymbol, ': ', average.toFixed(2));
 
             // create a variable for the USD amount and log rounded value
-            let usdAmount = average * inputAmountFloat;
-            console.log('usd amount of', inputAssetSymbol, ': ', usdAmount.toFixed(2));
+            // let usdAmount = average * inputAmountFloat;
+            // console.log('usd amount of', inputAssetSymbol, ': ', usdAmount.toFixed(2));
 
             // if the swap amount is greater than 20 USD, set swapEligibility to true
-            if (inputAmountFloat * average > 20) {
+            if (inputAmountFloat * price > 20) {
                 swapEligibility = true;
             }
 
@@ -93,29 +108,42 @@ async function eligibility(response) {
             // get the price of the asset from CoinGecko at the timestamp of the deposit
             let timestamp = depositeds[i]['timestamp'];
 
+            // if the input asset is USDT, DAI, or USDC then set the price to 1
+            if (assetSymbol == 'USDT' || assetSymbol == 'DAI' || assetSymbol == 'USDC') {
+                var price = 1;
+            } else if (assetSymbol == 'WETH') {
+                var price = 2500;
+            } else if (assetSymbol == 'WBTC') {
+                var price = 30000;
+            } else if (assetSymbol == 'SNX') {
+                var price = 4.5;
+            } else if (assetSymbol == 'OP') {
+                var price = 2;
+            };
+
             // get the price during the timestamp
-            let price = await CoinGeckoClient.coins.fetchCoinContractMarketChartRange(asset, 'optimistic-ethereum', {
-                from: timestamp-1,
-                to: timestamp+1,
-            });
+            // let price = await CoinGeckoClient.coins.fetchCoinContractMarketChartRange(asset, 'optimistic-ethereum', {
+            //     from: timestamp-1,
+            //     to: timestamp+1,
+            // });
             
             // now get the average of the values in data.prices
-            let prices = price['data']['prices'];
-            let sum = 0;
-            for (let j = 0; j < prices.length; j++) {
-                sum += prices[j][1];
-            }
-            let average = sum / prices.length;
+            // let prices = price['data']['prices'];
+            // let sum = 0;
+            // for (let j = 0; j < prices.length; j++) {
+            //     sum += prices[j][1];
+            // }
+            // let average = sum / prices.length;
 
             // log the average price of the asset
-            console.log('price of', assetSymbol, ': ', average.toFixed(2));
+            // console.log('price of', assetSymbol, ': ', average.toFixed(2));
 
             // create a variable for the USD amount and log rounded value
-            let usdAmount = average * depositAmountFloat;
-            console.log('usd amount of', assetSymbol, ': ', usdAmount.toFixed(2));
+            // let usdAmount = average * depositAmountFloat;
+            // console.log('usd amount of', assetSymbol, ': ', usdAmount.toFixed(2));
 
             // if the deposit amount is greater than 20 USD, set depositEligibility to true
-            if (depositAmountFloat * average > 20) {
+            if (depositAmountFloat * price > 20) {
                 depositEligibility = true;
             }
 
