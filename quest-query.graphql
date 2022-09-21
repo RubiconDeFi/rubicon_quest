@@ -1,18 +1,10 @@
 query questEligibility($address: String!) {
-    swappeds(where: {recipient: $address, timestamp_gte: 1663646400}) {
-        txn
-        timestamp
+    swaps(where : {recipient: $address, inputAssetUsdValue_gte : 20, timestamp_gte : 1663646400}) {
         recipient
-        inputAsset
-        targetAsset
-        inputAmount
-        realizedFill
+        inputAssetUsdValue
     }
-    depositeds(where: {depositor: $address, timestamp_gte: 1663646400}) {
-        txn
-        timestamp
+    deposits(where: {depositor: $address, usdValue_gte : 20, timestamp_gte : 1663646400}) {
         depositor
-        asset
-        depositAmount
+        usdValue
     }
 }

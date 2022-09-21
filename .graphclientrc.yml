@@ -1,8 +1,8 @@
 sources:
-  - name: LowLevelLogs
+  - name: RubiconQuest
     handler:
       graphql:
-        endpoint: https://api.thegraph.com/subgraphs/name/denverbaumgartner/lowlevellogs
+        endpoint: https://api.thegraph.com/subgraphs/name/denverbaumgartner/rubiconquest
 
 documents:
   - ./quest-query.graphql
